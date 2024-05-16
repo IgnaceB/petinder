@@ -1,0 +1,90 @@
+<section class="tiny-dialog" xmlns:nameFilter="http://www.w3.org/1999/xhtml">
+  <h3>Find your pet</h3>
+  <div class="form-group">
+    <label for="name">Name</label>
+    <input id="name"
+           name="name"
+           class="form-control"
+           placeholder="Name"
+           [(ngModel)]="searchText">
+  </div>
+  <h3>create your pet</h3>
+  <form [formGroup]="createPetForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name</label>
+    <input formControlName="name"
+           type="text"
+           name="name"
+           class="form-control"
+           placeholder="Name">
+    <input formControlName="kind"
+           type="text"
+           name="kind"
+           class="form-control"
+           placeholder="Kind">
+    <input formControlName="image"
+           type="text"
+           name="image"
+           class="form-control"
+           placeholder="Image">
+    <input formControlName="profileText"
+           type="text"
+           name="profileText"
+           class="form-control"
+           placeholder="Profile text">
+    <input formControlName="popularity"
+           type="number"
+           name="popularity"
+           class="form-control"
+           placeholder="Popularity">
+    <button type="submit">
+      create your pet
+    </button>
+  </form>
+
+</section>
+<div class="container-fluid">
+  <div class="row">
+    @if (selectedPet) {
+      <div class="col-md-3">
+        <div class="gallery-detail">
+          <section id="petProfile" class="tiny-dialog fader">
+            <h3>{{ selectedPet.name }}</h3>
+            <p>{{ selectedPet.profileText }}</p>
+
+            <p>{{selectedPet.popularity}}</p>
+            <p>{{selectedPet.popularity|popularityValue}}</p>
+            <div class="dialog-centered">
+              <a type="button"
+                 routerLink="/setup-date/{{selectedPet.name}}"
+                 routerLinkActive="active"
+                 ariaCurrentWhenActive="page"
+                 class="btn btn-primary btn-lg dialog-centered">
+                Setup date
+              </a>
+              <a type="button" (click)="deletePet(selectedPet.id)" class="btn btn-primary btn-lg dialog-centered">
+                delete pet
+              </a>
+            </div>
+          </section>
+        </div>
+      </div>
+
+    }
+    <div id="gallery" class="col-md-9">
+      <div class="gallery">
+
+        @for (pet of pets$ | async | nameFilter:searchText; track pet.id) {
+          <div class="gallery-pet fader" (click)="selectPet(pet)" [class.active]="selectedPet==pet">
+            <img class="profile-picture" [src]="'https://pettinder.herokuapp.com/'+ pet.image">
+            <div class="overlay">
+              <div class="overlay-text">{{ pet.name }}</div>
+            </div>
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
